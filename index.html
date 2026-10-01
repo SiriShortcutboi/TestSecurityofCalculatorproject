@@ -157,9 +157,10 @@
       <form id="calc-form">
         <div class="radius-row">
           <label for="radius">Enter radius</label>
-          <input id="radius" inputmode="decimal" type="number" step="any" placeholder="e.g. 5" required>
+          <input id="radius" type="text" placeholder="e.g. 5" autocomplete="off">
         </div>
         <button type="submit">Calculate</button>
+        <p class="error" id="radius-error" role="alert"></p>
       </form>
       <section class="results" aria-live="polite">
         <p class="results-title">RESULTS</p>
@@ -189,8 +190,14 @@
     });
     document.getElementById("calc-form").addEventListener("submit", (event) => {
       event.preventDefault();
-      const radius = Number(document.getElementById("radius").value);
-      if (!Number.isFinite(radius)) return;
+      const rawRadius = document.getElementById("radius").value.trim();
+      const radius = Number(rawRadius);
+      const error = document.getElementById("radius-error");
+      if (rawRadius === "" || !Number.isFinite(radius)) {
+        error.textContent = "Please enter a valid numeric radius.";
+        return;
+      }
+      error.textContent = "";
       document.getElementById("out-radius").textContent = String(radius);
       document.getElementById("out-area").textContent = (Math.PI * radius ** 2).toFixed(2);
       document.getElementById("out-circumference").textContent = (2 * Math.PI * radius).toFixed(2);
